@@ -1,0 +1,109 @@
+﻿@using Application.Models
+@model IEnumerable<Application.Models.Projects.ProjectViewModel>
+@{
+    ViewData["Title"] = "GetProjects";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Проекты</h1>
+<table>
+    <thead>
+    <tr>
+        <th>Фильтр</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <th>
+            @using (Html.BeginForm())
+            {
+                <div class="form">
+                    <select id="filter">
+                        <option>Фильтр</option>
+                        <option value="1">Дата</option>
+                        <option value="2">Приоритет</option>
+                    </select>
+                    <div class="block"></div>
+                    <input name="start" id="dateId" class="block" type="date" style="display: none"/>
+                    <input name="priority" id="numberId" class="block" type="number" min="0" style="display: none"></input>
+                    <input type="submit" value="Выполнить"></input>
+                </div>
+                
+            }
+        </th>
+    </tr>
+    </tbody>
+</table>
+
+<div class="form-reset">
+    <input type="submit" value="Сброс" formmethod="get"/>
+</div>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th >
+            <a  asp-action="Create">Добавить</a>
+        </th>
+        <th>@Html.ActionLink("Название Проекта","Index",new {sort=SortProjects.stringType},"post")</th>
+        <th>@Html.DisplayName("Компания заказчик")</th>
+        <th>@Html.DisplayName("Компания исполнитель")</th>
+        <th>@Html.DisplayName("Руководитель")</th>
+        <th>@Html.DisplayName("Работников")</th>
+        <th>@Html.DisplayName("Дата начала")</th>
+        <th>@Html.DisplayName("Дата окончания")</th>
+        <th>@Html.DisplayName("Приоритет")</th>
+        
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td >
+                <a class="btn-sm btn-primary" asp-controller="Project" asp-action="View" asp-route-id="@item.Id">Посмотреть</a>
+            </td>
+            <td > @Html.DisplayFor(modelItem => item.ProjectName)</td>
+            <td >@Html.DisplayFor(modelItem => item.CompanyCustomer)</td>
+            <td >@Html.DisplayFor(modelItem => item.CompanyExecutor)</td>
+            @if (item.Manager != null)
+            {
+                <td >
+                    @Html.ActionLink($"{item.Manager.FirstName} {item.Manager.LastName}","View","Worker",new {id=item.Manager.Id})
+                </td>
+            }
+            @if (item?.Workers.Count>0)
+            {
+                <td>
+                    @Html.Raw(item.Workers.Count.ToString())
+                </td> 
+            }
+            else
+            {
+                <td>
+                    @Html.DisplayName("0")
+                </td> 
+            }
+            <td>@Html.Raw(item.StartTime.ToShortDateString())</td>
+            <td>@Html.Raw(item.EndTime.ToShortDateString())</td>
+            <td>@Html.DisplayFor(modelItem => item.Priority)</td>
+        </tr>
+    }
+    </tbody>
+</table>
+<div>
+    <a class="btn-sm btn-primary" asp-controller="Home" asp-action="Index">Вернуться</a>
+</div>
+
+<script>
+      let select=document.getElementById("selectId");
+      let block=document.getElementsByClassName("block");
+      let lastIndex=0;
+      select.addEventListener('change',function (){
+          block[lastIndex].style.display="none";
+          let index=select.selectedIndex;
+          block[index].style.display="block";
+          lastIndex=index;
+      });
+      
+</script>

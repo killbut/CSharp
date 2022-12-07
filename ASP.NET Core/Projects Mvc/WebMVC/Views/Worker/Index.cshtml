@@ -1,0 +1,45 @@
+﻿@model IEnumerable<Application.Models.Workers.WorkerViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h1>Работники</h1>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            <a class="btn-sm btn-primary" asp-action="Create">Добавить</a>
+        </th>
+        <th> @Html.DisplayName("Фамилия")</th>
+        <th> @Html.DisplayName("Имя")</th>
+        <th>@Html.DisplayName("Отчество") </th>
+        <th> @Html.DisplayName("Почта")</th>
+        <th>@Html.DisplayName("Проекты")</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <th>
+                <a class="btn-sm " asp-controller="Worker" asp-action="View" asp-route-id="@item.Id">Посмотреть</a>
+            </th>
+            <th> @Html.DisplayFor(modelItem => item.LastName)</th>
+            <th> @Html.DisplayFor(modelItem => item.FirstName) </th>
+            <th>@Html.DisplayFor(modelItem => item.Patronymic)</th>
+            <th> @Html.DisplayFor(modelItem => item.Email)</th>
+            @if (item.Projects.Count>0)
+            {
+                <td>
+                    @Html.Raw(item.Projects.Count.ToString());
+                </td>
+            }
+        </tr>
+    }
+    </tbody>
+</table>
+<div>
+    <a class="btn-sm btn-primary" asp-controller="Home" asp-action="Index">Вернуться</a>
+</div>

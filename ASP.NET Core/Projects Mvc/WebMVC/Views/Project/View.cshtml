@@ -1,0 +1,58 @@
+﻿@model Application.Models.Projects.ProjectViewModel
+@{
+    ViewData["Title"] = "View";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div>
+    <h4>Проект</h4>
+    <hr/>
+    <dl class="row"/>
+    <dt>@Html.DisplayName("Id")</dt>
+    <dd>@Html.DisplayFor(x => x.Id)</dd>
+    
+    <dt>@Html.DisplayName("Название проекта")</dt>
+    <dd>@Html.DisplayFor(x => x.ProjectName)</dd>
+
+    <dt>@Html.DisplayName("Компания-Заказчик")</dt>
+    <dd>@Html.DisplayFor(x => x.CompanyCustomer)</dd>
+    
+    <dt class="col-sm-2">@Html.DisplayName("Компания-Исполнитель")</dt>
+    <dd>@Html.DisplayFor(x=>x.CompanyExecutor)</dd>
+    
+    <dt class="col-sm-2">@Html.DisplayName("Руководитель")</dt>
+    @if (Model.Manager != null)
+    {
+        <dd>@Html.ActionLink(Model.Manager.FirstName,"View","Worker",new{id=Model.Manager.Id})</dd>
+    }
+    else
+    {
+        <dd>@Html.DisplayName("------")</dd>
+    }
+    <dt class="col-sm-2">@Html.DisplayName("Работники")</dt>
+    <dd>
+        @if (Model.Workers.Count >= 0)
+        {
+            foreach (var item in Model.Workers)
+            {
+                <dd>
+                    @Html.ActionLink($"{item.FirstName} {item.LastName}", "View", "Worker", new { item.Id })
+                </dd>
+            }
+        }
+    </dd>
+    
+    <dt>@Html.DisplayName("Дата начала")</dt>
+    <dd>@Html.DisplayFor(x => x.StartTime.Date)</dd>
+    
+    <dt>@Html.DisplayName("Дата окончания")</dt>
+    <dd>@Html.DisplayFor(x=>x.EndTime.Date)</dd>
+    
+    <dt>@Html.DisplayName("Приоритет")</dt>
+    <dd>@Html.DisplayFor(x => x.Priority)</dd>
+    
+</div>
+<div>
+    <a class="btn-sm btn-primary" asp-controller="Project" asp-action="Edit" asp-route-id="@Model.Id">Редактировать</a>
+    <a class="btn-sm btn-warning" asp-controller="Project" asp-action="Delete" asp-route-id="@Model.Id">Удалить</a>
+    <a class="btn-sm btn-primary" asp-controller="Project" asp-action="Index">Вернуться</a>
+</div>
