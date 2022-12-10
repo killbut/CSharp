@@ -2,7 +2,6 @@
 using Application.Services.Interfaces;
 using Core.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace WebMVC.Controllers
 {
@@ -16,7 +15,7 @@ namespace WebMVC.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index(string typeSorting=null)
+        public IActionResult Index(string typeSorting = null, string typeFilter = null)
         {
             var sorting = Sorting(typeSorting);
             return View(_projectService.GetProjects(orderBy:sorting,Includes:"Manager Workers Jobs"));
@@ -75,7 +74,7 @@ namespace WebMVC.Controllers
 
         private Func<IQueryable<Project>, IOrderedQueryable<Project>>Sorting(string sort) //todo bad code
         {
-            ViewData["NameSort"]=string.IsNullOrEmpty(sort)? "NameDesc":"Name";
+            ViewData["NameSort"]=sort=="Name" ? "NameDesc":"Name";
             ViewData["CustomerSort"] = sort=="Customer" ? "CustomerDesc" : "Customer";
             ViewData["ExecutorSort"]= sort=="Executor" ? "ExecutorDesc" : "Executor";
             ViewData["ManagerSort"] = sort=="Manager" ? "ManagerDesc" : "Manager";
@@ -111,7 +110,7 @@ namespace WebMVC.Controllers
                             x.OrderBy(x => x.Manager));
                     case "WorkerDesc":
                         return new Func<IQueryable<Project>, IOrderedQueryable<Project>>(x =>
-                            x.OrderByDescending(x => x.Workers));
+                            x.OrderByDescending(x => x.Workers.Count));
                     case "Worker":
                         return new Func<IQueryable<Project>, IOrderedQueryable<Project>>(x =>
                             x.OrderBy(x => x.Workers.Count));
@@ -140,7 +139,6 @@ namespace WebMVC.Controllers
                             x.OrderBy(x => x.Priority));
                 }
             }
-
             return null;
         }
     }
