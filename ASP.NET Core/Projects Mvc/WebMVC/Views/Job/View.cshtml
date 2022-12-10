@@ -6,28 +6,46 @@
 <div>
     <h4>Задача</h4>
     <hr/>
-    <dl class="row"/>
-    <dt>@Html.DisplayName("Id")</dt>
-    <dd>@Html.DisplayFor(x => x.Id)</dd>
-    
-    <dt>@Html.DisplayName("Задача")</dt>
-    <dd>@Html.DisplayFor(x => x.JobName)</dd>
+    <dl class="row">
+        <dt>@Html.DisplayName("Id")</dt>
+        <dd>@Html.DisplayFor(x => x.Id)</dd>
 
-    <dt>@Html.DisplayName("Автор")</dt>
-    <dd>@Html.DisplayFor(x => x.Author)</dd>
-    
-    <dt class="col-sm-2">@Html.DisplayName("Исполнитель")</dt>
-    <dd>@Html.DisplayFor(x=>x.Performer)</dd>
-    
-    <dt>@Html.DisplayName("Статус")</dt>
-    <dd>@Html.DisplayFor(x=>x.Status)</dd>
-    
-    <dt>@Html.DisplayName("Описание")</dt>
-    <dd>@Html.DisplayFor(x => x.Description)</dd>
-    
-    <dt>@Html.DisplayName("Приоритет")</dt>
-    <dd>@Html.DisplayFor(x => x.Priority)</dd>
-    
+        <dt>@Html.DisplayName("Задача")</dt>
+        <dd>@Html.DisplayFor(x => x.JobName)</dd>
+
+        <dt>@Html.DisplayName("Автор")</dt>
+        <dd>
+            @if (Model.Author != null)
+            {
+                @Html.ActionLink(Model.Author.FullName, "View", "Worker", new { Model.Author.Id })
+            }
+            else
+            {
+                @Html.DisplayName("----")
+            }
+        </dd>
+
+        <dt>@Html.DisplayName("Исполнитель")</dt>
+        <dd>
+            @if (Model.Performer != null)
+            {
+                @Html.ActionLink(Model.Performer.FullName, "View", "Worker", new { Model.Performer.Id })
+            }
+            else
+            {
+                @Html.DisplayName("--------")
+            }
+        </dd>
+        <dt>@Html.DisplayName("Статус")</dt>
+        <dd>@Html.DisplayFor(x => x.Status)</dd>
+
+        <dt>@Html.DisplayName("Описание")</dt>
+        <dd>@Html.DisplayFor(x => x.Description)</dd>
+
+        <dt>@Html.DisplayName("Приоритет")</dt>
+        <dd>@Html.DisplayFor(x => x.Priority)</dd>
+
+    </dl>
 </div>
 <div>
     <a class="btn-sm btn-primary" asp-controller="Job" asp-action="Edit" asp-route-id="@Model.Id">Редактировать</a>

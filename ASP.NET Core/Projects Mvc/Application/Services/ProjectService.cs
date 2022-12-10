@@ -40,22 +40,15 @@ namespace Application.Services
         public ProjectEditViewModel GetWhenEdit(int id)
         {
             var mappedProject = ObjectMapper.Mapper.Map<ProjectEditViewModel>( _projectRepository.GetById(id));
-            var mappedWorkers = ObjectMapper.Mapper.Map<IEnumerable<WorkerViewModel>>(_workerRepository.GetAll());
-            var mappedJobs = ObjectMapper.Mapper.Map<IEnumerable<JobViewModel>>(_jobRepository.GetAll());
-            mappedProject.AvailableWorkers = mappedWorkers;
-            mappedProject.AvailableJobs = mappedJobs;
+            mappedProject.AvailableWorkers = ObjectMapper.Mapper.Map<IEnumerable<WorkerViewModel>>(_workerRepository.GetAll());
+            mappedProject.AvailableJobs = ObjectMapper.Mapper.Map<IEnumerable<JobViewModel>>(_jobRepository.GetAll());
             return mappedProject;
         }
         public ProjectCreateViewModel GetWhenCreate()
         {
-            var project = new ProjectCreateViewModel();
-            var mappedProject = ObjectMapper.Mapper.Map<ProjectCreateViewModel>(project);
-            var workers = _workerRepository.GetAll();
-            var jobs = _jobRepository.GetAll();
-            var mappedWorkers = ObjectMapper.Mapper.Map<IEnumerable<WorkerViewModel>>(workers);
-            var mappedJobs = ObjectMapper.Mapper.Map<IEnumerable<JobViewModel>>(jobs);
-            mappedProject.AvailableWorkers = mappedWorkers;
-            mappedProject.AvailableJobs = mappedJobs;
+            var mappedProject = ObjectMapper.Mapper.Map<ProjectCreateViewModel>( new ProjectCreateViewModel());
+            mappedProject.AvailableWorkers  = ObjectMapper.Mapper.Map<IEnumerable<WorkerViewModel>>(_workerRepository.GetAll());
+            mappedProject.AvailableJobs = ObjectMapper.Mapper.Map<IEnumerable<JobViewModel>>(_jobRepository.GetAll());
             return mappedProject;
         }
         public ProjectViewModel GetById(int id)
@@ -64,11 +57,11 @@ namespace Application.Services
             return ObjectMapper.Mapper.Map<ProjectViewModel>(project);
         }
 
-        public int Create(ProjectCreateViewModel project)
+        public int Create(ProjectCreateViewModel projectModel)
         {
-            var mappedProject = ObjectMapper.Mapper.Map<Project>(project);
-            mappedProject=_projectRepository.AddWorkersToProject(mappedProject, project.SelectedWorkersId, project.SelectedManagerId);
-            mappedProject = _projectRepository.AddJobsToProject(mappedProject, project.SelectedJobs);
+            var mappedProject = ObjectMapper.Mapper.Map<Project>(projectModel);
+            _projectRepository.AddWorkersToProject(mappedProject, projectModel.SelectedWorkersId, projectModel.SelectedManagerId);
+            _projectRepository.AddJobsToProject(mappedProject, projectModel.SelectedJobs);
             _projectRepository.Add(mappedProject);
             return mappedProject.Id;
         }
@@ -78,13 +71,14 @@ namespace Application.Services
             _projectRepository.Delete(id);
         }
 
-        public int Update(ProjectEditViewModel project)
+        public int Update(ProjectEditViewModel projectModel)
         {
-            var mappedProject = ObjectMapper.Mapper.Map<Project>(project);
-            mappedProject = _projectRepository.AddJobsToProject(mappedProject, project.SelectedJobs);
-            mappedProject = _projectRepository.AddWorkersToProject(mappedProject, project.SelectedWorkersId, project.SelectedManagerId);
-            _projectRepository.Update(mappedProject);
-            return mappedProject.Id;
+            var project = _projectRepository.GetById(projectModel.Id);
+            ObjectMapper.Mapper.Map<ProjectEditViewModel, Project>(projectModel, project); 
+            _projectRepository.AddJobsToProject(project, projectModel.SelectedJobs);
+            _projectRepository.AddWorkersToProject(project, projectModel.SelectedWorkersId, projectModel.SelectedManagerId);
+            _projectRepository.Update(project);
+            return project.Id;
         }
     }
 }

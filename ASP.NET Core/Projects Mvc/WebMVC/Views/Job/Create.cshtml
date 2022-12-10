@@ -1,28 +1,37 @@
-﻿@model Application.Models.Jobs.JobCreateViewModel
+﻿@using Core.Entities
+@model Application.Models.Jobs.JobCreateViewModel
 @{
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<form asp-controller="Project" asp-action="Create" method="post">
+<form asp-controller="Job" asp-action="Create" method="post">
     <div class="form-group">
-        <label asp-for="JobName" class="control-label">Название Проекта</label>
+        <label asp-for="JobName" class="control-label">Название задачи</label>
         <input type="text" asp-for="JobName" class="form-control"/>
         <span asp-validation-for="JobName" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Author" class="control-label">Компания-Заказчик</label>
-        <input type="text" asp-for="Author" class="form-control"/>
-        <span asp-validation-for="Author" class="text-danger"></span>
+        <label asp-for="AuthorId" class="control-label">Автор</label>
+        @Html.DropDownListFor(x => x.AuthorId, new SelectList(Model.AvailableWorkers,"Id","FullName", Model.AuthorId))
     </div>
     <div class="form-group">
-        <label asp-for="Performer" class="control-label">Компания-Исполнитель</label>
-        <input type="text" asp-for="Performer" class="form-control"/>
-        <span asp-validation-for="Performer" class="text-danger"></span>
+        <label asp-for="SelectedPerformerId" class="control-label">Исполнитель</label>
+        @Html.DropDownListFor(x => x.SelectedPerformerId, new SelectList(Model.AvailableWorkers,"Id","FullName", Model.SelectedPerformerId))
     </div>
     <div class="form-group">
-        <label asp-for="Priority" class="control-label">Приоритет</label>
-        <input type="number" asp-for="Priority" class="form-control"/>
+        <label asp-for="Status" class="control-label">Статус</label>
+        @Html.DropDownListFor(x => x.Status, @Html.GetEnumSelectList(typeof(JobStatus)))
+        <span asp-validation-for="Status" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Description" class="control-label">Описание</label>
+        <input type="text" asp-for="Description" class="form-control"/>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Priority">Приоритет</label>
+        <input type="number" min="0" asp-for="Priority" />
         <span asp-validation-for="Priority" class="text-danger"></span>
     </div>
     <div class="form-group">

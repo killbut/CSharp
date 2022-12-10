@@ -11,5 +11,6 @@ namespace Application.Models.Workers
         public string Email { get; set; }
         public ICollection<Project> Projects { get; set; }
         public ICollection<Job>? Jobs { get; set; }
+        public string FullName => $"{LastName} {FirstName} {Patronymic}";
     }
 }

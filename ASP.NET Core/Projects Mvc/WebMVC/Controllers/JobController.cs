@@ -28,7 +28,7 @@ public class JobController : Controller
     [HttpGet]
     public IActionResult Create()
     {
-        return View( new JobCreateViewModel());
+        return View(_jobService.GetWhenCreate());
     }
 
     [HttpPost]
@@ -43,20 +43,26 @@ public class JobController : Controller
     }
 
     [HttpGet]
-    public IActionResult Edit()
+    public IActionResult Edit(int id)
     {
-        return View();
+        return View(_jobService.GetWhenEdit(id));
     }
 
     [HttpPost]
     public IActionResult Edit(JobEditViewModel job)
     {
-        return View();
+        if (ModelState.IsValid)
+        {
+            var id=_jobService.Update(job);
+            return RedirectToAction("View", "Job", new { id });
+        }
+        return RedirectToAction("Index");
     }
 
     [HttpGet]
     public IActionResult Delete(int id)
     {
-        return Index();
+        _jobService.Delete(id);
+        return RedirectToAction("Index","Job");
     }
 }

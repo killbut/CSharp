@@ -55,9 +55,10 @@ namespace Application.Services
 
         public int Update(WorkerEditViewModel workerModel)
         {
-            var mapped = ObjectMapper.Mapper.Map<Worker>(workerModel);
-            _workerRepository.Update(mapped);
-            return mapped.Id;
+            var worker = _workerRepository.GetById(workerModel.Id);
+            ObjectMapper.Mapper.Map<WorkerEditViewModel,Worker>(workerModel,worker);
+            _workerRepository.Update(worker);
+            return worker.Id;
         }
     }
 }

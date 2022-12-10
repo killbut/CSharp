@@ -39,30 +39,44 @@
     <dd class="col-sm-10">
         @Html.DisplayFor(model => model.Email)
     </dd>
-    <div class="col-sm-10">
-        @Html.DisplayName("Проекты")
-        @if (Model.Projects.Count > 0)
-        {
-            foreach (var project in Model.Projects)
-            {
-                <dt>
-                    @Html.ActionLink(project.ProjectName,"View","Project",new {project.Id})
-                </dt>
-            }
-        }
-    </div>
-    <div class="col-sm-10">
-        @Html.DisplayName("Задачи")
-        @if (Model.Jobs.Count > 0)
-        {
-            foreach (var job in Model.Jobs)
-            {
-                <dt>
-                    @Html.ActionLink(job.JobName,"View","Job",new {job.Id})
-                </dt>
-            }
-        }
-    </div>
+    <table>
+        <thead>
+        <tr>
+            <th>
+                @Html.DisplayName("Проекты")
+            </th>
+            <th>
+                @Html.DisplayName("Задачи")
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>
+                @if (Model.Projects.Count > 0)
+                {
+                    foreach (var project in Model.Projects)
+                    {
+                        <dt class="row">
+                            @Html.ActionLink(project.ProjectName, "View", "Project", new { project.Id })
+                        </dt>
+                    }
+                }
+            </th>
+            <th>
+                @if (Model.Jobs.Count > 0)
+                {
+                    foreach (var job in Model.Jobs)
+                    {
+                        <dt>
+                            @Html.ActionLink(job.JobName, "View", "Job", new { job.Id })
+                        </dt>
+                    }
+                }
+            </th>
+        </tr>
+        </tbody>
+    </table>
 </div>
 
 <div>

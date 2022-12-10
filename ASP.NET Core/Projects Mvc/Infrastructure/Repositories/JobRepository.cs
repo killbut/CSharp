@@ -12,20 +12,32 @@ public class JobRepository : BaseRepository<Job>, IJobRepository
     {
     }
 
-    public Job AddWorkerToJob(Job job, int? performerId, int authorId)
+    public Job AddWorkerToJob(Job job, int? performerId, int? authorId)
     {
         if (performerId.HasValue)
         {
             job.Performer = _context.Workers.Include(x => x.Jobs).First(x => x.Id == performerId);
         }
 
-        job.Author = _context.Workers.Include(x => x.Jobs).First(x => x.Id == authorId);
+        if (authorId.HasValue)
+        {
+            job.Author = _context.Workers.Include(x => x.Jobs).First(x => x.Id == authorId);
+        }
         return job;
+    }
+
+    public Job GetById(int id)
+    {
+        return _context.Jobs.Include(x => x.Author)
+            .Include(x => x.Performer)
+            .First(x => x.Id == id);
     }
 
     public void Delete(int id)
     {
-        var job = _context.Jobs.Include(x => x.Performer).Include(x => x.Author).First(x => x.Id == id);
+        var job = _context.Jobs.Include(x => x.Performer)
+            .Include(x => x.Author)
+            .First(x => x.Id == id);
         Remove(job);
     }
 }

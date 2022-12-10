@@ -13,8 +13,8 @@ namespace Application.Services.Interfaces
         ProjectEditViewModel GetWhenEdit(int id);
         ProjectCreateViewModel GetWhenCreate();
         ProjectViewModel GetById(int id);
-        int Create(ProjectCreateViewModel project);
+        int Create(ProjectCreateViewModel projectModel);
         void Delete(int id);
-        int Update(ProjectEditViewModel project);
+        int Update(ProjectEditViewModel projectModel);
     }
 }

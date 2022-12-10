@@ -1,4 +1,5 @@
-﻿@model Application.Models.Projects.ProjectEditViewModel
+﻿@using Core.Entities
+@model Application.Models.Jobs.JobEditViewModel
 @{
     ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -6,66 +7,47 @@
 
 <h1>Редактировать</h1>
 
-<h4>Проект</h4>
-<hr />
+<h4>Задача</h4>
+<hr/>
 <div class="row">
-    <form asp-controller="Project" asp-action="Edit">
+    <form method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"/>
         <div class="form-group">
-            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="Id"/>
         </div>
         <div class="form-group">
-            <label asp-for="ProjectName" class="control-label">Название проекта</label>
-            <input asp-for="ProjectName" class="form-control" />
-            <span asp-validation-for="ProjectName" class="text-danger"></span>
+            <label asp-for="JobName" class="control-label">Название</label>
+            <input asp-for="JobName" class="form-control"/>
+            <span asp-validation-for="JobName" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <label asp-for="CompanyCustomer" class="control-label">Компания-Заказчик</label>
-            <input asp-for="CompanyCustomer" class="form-control" />
-            <span asp-validation-for="CompanyCustomer" class="text-danger"></span>
+            <label asp-for="Author" class="control-label">Автор</label>
+            @Html.DropDownListFor(x => x.SelectAuthorId, new SelectList(Model.AvailableWorkers, "Id", "FullName", Model.SelectAuthorId))
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Performer" class="control-label">Исполнитель</label>
+            @Html.DropDownListFor(x => x.SelectPerformerId, new SelectList(Model.AvailableWorkers, "Id", "FullName", Model.SelectPerformerId))
         </div>
         <div class="form-group">
-            <label asp-for="CompanyExecutor" class="control-label">Компания-Исполнитель</label>
-            <input asp-for="CompanyExecutor" class="form-control" TYPE="text"/>
-            <span asp-validation-for="CompanyExecutor" class="text-danger"></span>
+            <label asp-for="Status" class="control-label">Статус</label>
+            @Html.DropDownListFor(x => x.Status, @Html.GetEnumSelectList(typeof(JobStatus)))
         </div>
         <div class="form-group">
-            <label asp-for="Manager" class="control-label">Текущий Руководитель</label>
-            @Html.ActionLink(Model.Manager.FirstName+Model.Manager.LastName,"View","Worker",new{Model.Manager.Id})
-            
-            <label asp-for="Manager" class="control-label">Выбрать Руководителя</label>
-            @Html.DropDownListFor(x=>x.Manager,new SelectList(Model.AvailableWorkers,"Id","FirstName",new{Model.SelectedManagerId}))
-            <span asp-validation-for="Manager" class="text-danger"></span>
-            <span asp-validation-for="Manager" class="text-danger"></span>
+            <label asp-for="Description" class="control-label">Описание</label>
+            <input asp-for="Description" class="form-control"/>
+            <span asp-validation-for="Description" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <label asp-for="Manager" class="control-label">Текущие Работники</label>
-            @Html.ListBoxFor(x=>x.Workers,new SelectList(Model.Workers))
-            
-            <label asp-for="Manager" class="control-label">Выбрать работников</label>
-            @Html.ListBoxFor(x=>x.AvailableWorkers, new MultiSelectList(Model.AvailableWorkers,"Id","FirstName",Model.Workers))
-            <span asp-validation-for="Manager" class="text-danger"></span>
+            <label asp-for="Priority" class="control-label">Приоритет</label>
+            <input asp-for="Priority" min="0" class="form-control"/>
+            <span asp-validation-for="Priority" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <label asp-for="StartTime" class="control-label">Дата начала</label>
-            <input asp-for="StartTime" class="control-label" type="date"/>
-            <span asp-validation-for="Manager" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="EndTime" >Дата начала</label>
-            <input asp-for="EndTime" type="date"/>
-            <span asp-validation-for="Manager" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="Priority" >Дата начала</label>
-            <input asp-for="Priority" type="number"/>
-            <span asp-validation-for="Manager" class="text-danger"></span>
-        </div>
-        
-        <div class="form-group">
-            <input type="submit" value="Save" class="btn btn-outline-secondary" />
+            <input type="submit" value="Save" class="btn-sm btn-primary"/>
         </div>
     </form>
 </div>
-<div class="row">
-    <a class="btn-sm btn-primary" asp-controller="Project" asp-action="View" asp-route-id="@Model.Id">Вернуться</a>
+<div>
+    <a class="btn-sm btn-primary" asp-controller="Job" asp-action="View" asp-route-id="@Model.Id">Вернуться</a>
 </div>

@@ -32,7 +32,7 @@ public class JobService : IJobService
 
     public JobEditViewModel GetWhenEdit(int id)
     {
-        var job = _jobRepository.Get(id);
+        var job = _jobRepository.GetById(id);
         var mappedJob = ObjectMapper.Mapper.Map<JobEditViewModel>(job);
         var workers = _workerRepository.GetAll();
         var mappedWorkers = ObjectMapper.Mapper.Map<IEnumerable<WorkerViewModel>>(workers);
@@ -52,15 +52,15 @@ public class JobService : IJobService
 
     public JobViewModel GetById(int id)
     {
-        var job = _jobRepository.Get(id);
+        var job = _jobRepository.GetById(id);
         return ObjectMapper.Mapper.Map<JobViewModel>(job);
     }
 
-    public int Create(JobCreateViewModel job)
+    public int Create(JobCreateViewModel jobModel)
     {
-        var mapped = ObjectMapper.Mapper.Map<Job>(job);
-        var newJob=_jobRepository.AddWorkerToJob(mapped, job.SelectedWorkerId, job.AuthorId);
-        _jobRepository.Add(newJob);
+        var mapped = ObjectMapper.Mapper.Map<Job>(jobModel);
+        _jobRepository.AddWorkerToJob(mapped, jobModel.SelectedPerformerId, jobModel.AuthorId);
+        _jobRepository.Add(mapped);
         return mapped.Id;
     }
 
@@ -69,8 +69,13 @@ public class JobService : IJobService
         _jobRepository.Delete(id);
     }
 
-    public int Update(JobViewModel project)
+    public int Update(JobEditViewModel jobModel)
     {
-        throw new NotImplementedException();
+        var mappedJob = _jobRepository.GetById(jobModel.Id);
+        ObjectMapper.Mapper.Map<JobEditViewModel,Job>(jobModel,mappedJob);
+        _jobRepository.AddWorkerToJob(mappedJob, jobModel.SelectPerformerId, jobModel.SelectAuthorId);
+        _jobRepository.Update(mappedJob);
+        return mappedJob.Id;
     }
+    
 }

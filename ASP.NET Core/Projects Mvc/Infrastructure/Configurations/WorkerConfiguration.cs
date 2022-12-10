@@ -16,8 +16,7 @@ namespace Infrastructure.Configurations
             builder.HasMany(x => x.Jobs)
                 .WithOne(x=>x.Performer)
                 .HasForeignKey(x=>x.PerformerId)
-                .OnDelete(DeleteBehavior.SetNull);
-            
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

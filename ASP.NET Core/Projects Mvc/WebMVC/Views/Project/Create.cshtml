@@ -22,11 +22,11 @@
     </div>
     <div>
         <label asp-for="AvailableWorkers" class="control-label">Руководитель</label>
-        @Html.DropDownListFor(x => x.SelectedManagerId, new SelectList(Model.AvailableWorkers, "Id", "FirstName"),new{@class="form-control"})
+        @Html.DropDownListFor(x => x.SelectedManagerId, new SelectList(Model.AvailableWorkers, "Id", "FullName"),new{@class="form-control"})
     </div>
     <div>
         <label asp-for="AvailableWorkers" class="control-label">Работники</label>
-        @Html.ListBoxFor(x => x.SelectedWorkersId, new MultiSelectList(Model.AvailableWorkers, "Id", "FirstName", Model.SelectedWorkersId),new{@class="form-control"})
+        @Html.ListBoxFor(x => x.SelectedWorkersId, new MultiSelectList(Model.AvailableWorkers, "Id", "FullName", Model.SelectedWorkersId),new{@class="form-control"})
     </div>
     <div>
         <label asp-for="AvailableWorkers" class="control-label">Задачи</label>

@@ -1,6 +1,8 @@
 ﻿using Application.Models.Projects;
 using Application.Services.Interfaces;
+using Core.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace WebMVC.Controllers
 {
@@ -14,21 +16,13 @@ namespace WebMVC.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(string typeSorting=null)
         {
-            return View(_projectService.GetProjects(Includes:"Manager Workers Jobs"));
+            var sorting = Sorting(typeSorting);
+            return View(_projectService.GetProjects(orderBy:sorting,Includes:"Manager Workers Jobs"));
         }
         
-        [HttpPost]
-        public IActionResult Index(DateTime? start,ushort? priority)
-        {
-            if (start.HasValue)
-                return View(_projectService.GetProjects(predicate: x=>x.StartTime.ToShortDateString()==start.Value.ToShortDateString()));
-            if (priority.HasValue)
-                return View(_projectService.GetProjects(predicate:x=>x.Priority==priority.Value));
-            return Index();
-        }
-
+        
         [HttpGet]
         public IActionResult Create()
         {
@@ -77,6 +71,77 @@ namespace WebMVC.Controllers
         {
             _projectService.Delete(id);
             return RedirectToAction("Index");
+        }
+
+        private Func<IQueryable<Project>, IOrderedQueryable<Project>>Sorting(string sort) //todo bad code
+        {
+            ViewData["NameSort"]=string.IsNullOrEmpty(sort)? "NameDesc":"Name";
+            ViewData["CustomerSort"] = sort=="Customer" ? "CustomerDesc" : "Customer";
+            ViewData["ExecutorSort"]= sort=="Executor" ? "ExecutorDesc" : "Executor";
+            ViewData["ManagerSort"] = sort=="Manager" ? "ManagerDesc" : "Manager";
+            ViewData["WorkersSort"] = sort=="Worker" ? "WorkerDesc" : "Worker";
+            ViewData["JobsSort"]=sort=="Job"? "JobsDesc" : "Job";
+            ViewData["DateStartSort"] = sort=="DateStart" ? "DateStartDesc" : "DateStart";
+            ViewData["DateEndSort"]=sort=="DateEnd" ? "DateEndDesc" : "DateEnd";
+            ViewData["PrioritySort"]=sort=="Priority" ? "PriorityDesc" : "Priority";
+            if (!string.IsNullOrEmpty(sort))
+            {
+                switch (sort)
+                {
+                    case "NameDesc":
+                        return new Func<IQueryable<Project>, IOrderedQueryable<Project>>(x => x.OrderByDescending(x => x.ProjectName));
+                    case "Name":
+                        return new Func<IQueryable<Project>, IOrderedQueryable<Project>>(x => x.OrderBy(x => x.ProjectName));
+                    case "CustomerDesc":
+                        return new Func<IQueryable<Project>, IOrderedQueryable<Project>>(x => x.OrderByDescending(x => x.CompanyCustomer));
+                    case "Customer":
+                        return new Func<IQueryable<Project>, IOrderedQueryable<Project>>(x =>
+                            x.OrderBy(x => x.CompanyCustomer));
+                    case "ExecutorDesc":
+                        return new Func<IQueryable<Project>, IOrderedQueryable<Project>>(x =>
+                            x.OrderByDescending(x => x.CompanyExecutor));
+                    case "Executor":
+                        return new Func<IQueryable<Project>, IOrderedQueryable<Project>>(x =>
+                            x.OrderBy(x => x.CompanyExecutor));
+                    case "ManagerDesc":
+                        return new Func<IQueryable<Project>, IOrderedQueryable<Project>>(x =>
+                            x.OrderByDescending(x => x.Manager));
+                    case "Manager":
+                        return new Func<IQueryable<Project>, IOrderedQueryable<Project>>(x =>
+                            x.OrderBy(x => x.Manager));
+                    case "WorkerDesc":
+                        return new Func<IQueryable<Project>, IOrderedQueryable<Project>>(x =>
+                            x.OrderByDescending(x => x.Workers));
+                    case "Worker":
+                        return new Func<IQueryable<Project>, IOrderedQueryable<Project>>(x =>
+                            x.OrderBy(x => x.Workers.Count));
+                    case "JobsDesc":
+                        return new Func<IQueryable<Project>, IOrderedQueryable<Project>>(x =>
+                            x.OrderByDescending(x => x.Jobs.Count));
+                    case "Jobs":
+                        return new Func<IQueryable<Project>, IOrderedQueryable<Project>>(x => x.OrderBy(x => x.Jobs));
+                    case "DateStartDesc":
+                        return new Func<IQueryable<Project>, IOrderedQueryable<Project>>(x =>
+                            x.OrderByDescending(x => x.StartTime));
+                    case "DateStart":
+                        return new Func<IQueryable<Project>, IOrderedQueryable<Project>>(x =>
+                            x.OrderBy(x => x.StartTime));
+                    case "DateEndDesc":
+                        return new Func<IQueryable<Project>, IOrderedQueryable<Project>>(x =>
+                            x.OrderByDescending(x => x.EndTime));
+                    case "DateEnd":
+                        return new Func<IQueryable<Project>, IOrderedQueryable<Project>>(x =>
+                            x.OrderBy(x => x.EndTime));
+                    case "PriorityDesc":
+                        return new Func<IQueryable<Project>, IOrderedQueryable<Project>>(x =>
+                            x.OrderByDescending(x => x.Priority));
+                    case "Priority":
+                        return new Func<IQueryable<Project>, IOrderedQueryable<Project>>(x =>
+                            x.OrderBy(x => x.Priority));
+                }
+            }
+
+            return null;
         }
     }
 }

@@ -28,57 +28,99 @@
             <input asp-for="CompanyExecutor" class="form-control" TYPE="text"/>
             <span asp-validation-for="CompanyExecutor" class="text-danger"></span>
         </div>
-        <div class="row">
-            <label asp-for="Manager" class="control-label">Текущий Руководитель</label>
-            @if (Model.Manager != null)
-            {
-                @Html.ActionLink($"{Model.Manager.FirstName} {Model.Manager.LastName}", "View", "Worker", new { Model.Manager.Id })
-            }
-            else
-            {
-                @Html.DisplayName("--------")
-            }
-        </div>
-        <div class="row">
-            <label asp-for="SelectedManagerId" class="control-label">Выбрать Руководителя</label>
-            @Html.DropDownListFor(x => x.SelectedManagerId, new SelectList(Model.AvailableWorkers, "Id", "FirstName", Model.SelectedManagerId ))
-        </div>
-        <div class="row">
-            <label asp-for="Workers" class="control-label">Текущие Работники</label>
-            @if (Model.Workers.Count() > 0)
-            {
-                foreach (var item in Model.Workers)
-                {
-                    @Html.ActionLink($"{item.FirstName} {item.LastName}", "View", "Worker", new { item.Id })
-                }
-            }
-            else
-            {
-                @Html.DisplayName("--------")
-            }
-        </div>
-        <div class="row">
-            <label asp-for="SelectedWorkersId" class="control-label">Выбрать работников</label>
-            @Html.ListBoxFor(x => x.SelectedWorkersId, new MultiSelectList(Model.AvailableWorkers, "Id", "FirstName", Model.Workers))
-        </div>
-        <div class="row">
-            <label asp-for="Jobs" class="control-label">Текущие задачи</label>
-            @if (Model.Jobs.Count > 0)
-            {
-                foreach (var item in Model.Jobs)
-                {
-                    @Html.ActionLink($"{item.JobName}-{item.Status}", "View", "Job", new { item.Id })
-                }
-            }
-            else
-            {
-                @Html.DisplayName("--------")
-            }
-        </div>
-        <div class="row">
-            <label asp-for="Jobs" class="control-label">Выбрать задачи</label>
-            @Html.ListBoxFor(x => x.SelectedJobs, new MultiSelectList(Model.AvailableJobs, "Id", "JobName", Model.SelectedJobs))
-        </div>
+        <table>
+            <thead>
+            <tr>
+                <th>
+                    <label asp-for="Manager" class="control-label">Текущий Руководитель</label>
+                </th>
+                <th>
+                    <label asp-for="SelectedManagerId" class="control-label">Выбрать Руководителя</label>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th>
+                    @if (Model.Manager != null)
+                    {
+                        @Html.ActionLink(Model.Manager.FullName, "View", "Worker", new { Model.Manager.Id })
+                    }
+                    else
+                    {
+                        @Html.DisplayName("--------")
+                    }
+                </th>
+                <th>
+                    @Html.DropDownListFor(x => x.SelectedManagerId, new SelectList(Model.AvailableWorkers, "Id", "FullName", Model.SelectedManagerId))
+                </th>
+            </tr>
+            </tbody>
+        </table>
+        <table>
+            <thead>
+            <tr>
+                <th>
+                    <label asp-for="Workers" class="control-label">Текущие Работники</label>
+                </th>
+                <th>
+                    <label asp-for="SelectedWorkersId" class="control-label">Выбрать работников</label>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th>
+                    @if (Model.Workers.Count() > 0)
+                    {
+                        foreach (var item in Model.Workers)
+                        {
+                            <div class="row">@Html.ActionLink(item.FullName, "View", "Worker", new { item.Id })</div>
+                        }
+                    }
+                    else
+                    {
+                        @Html.DisplayName("--------")
+                    }
+                </th>
+                <th>
+                    @Html.ListBoxFor(x => x.SelectedWorkersId, new MultiSelectList(Model.AvailableWorkers, "Id", "FullName", Model.Workers))
+                </th>
+            </tr>
+            </tbody>
+        </table>
+        <table>
+            <thead>
+            <tr>
+                <th>
+                    <label asp-for="Jobs" class="control-label">Текущие задачи</label>
+                </th>
+                <th>
+                    <label asp-for="Jobs" class="control-label">Выбрать задачи</label>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th>
+                    @if (Model.Jobs.Count > 0)
+                    {
+                        foreach (var item in Model.Jobs)
+                        {
+                            <div class="row"> @Html.ActionLink($"{item.JobName}-{item.Status}", "View", "Job", new { item.Id }) </div>
+                        }
+                    }
+                    else
+                    {
+                        @Html.DisplayName("--------")
+                    }
+                </th>
+                <th>
+                    @Html.ListBoxFor(x => x.SelectedJobs, new MultiSelectList(Model.AvailableJobs, "Id", "JobName", Model.SelectedJobs))
+                </th>
+            </tr>
+            </tbody>
+        </table>
         <div class="row">
             <label asp-for="StartTime" class="control-label">Дата начала</label>
             <input asp-for="StartTime" class="control-label" type="date"/>
@@ -91,8 +133,8 @@
         </div>
         <div class="form-group">
             <label asp-for="Priority">Приоритет</label>
-            <input asp-for="Priority" type="number"/>
-            <span asp-validation-for="Priority" class="text-danger"></span>
+            <input asp-for="Priority" type="number" min="0"/>
+            <span asp-validation-for="Priority"  class="text-danger"></span>
         </div>
         <div class="form-group">
             <input type="submit" value="Сохранить" class="btn-sm"/>

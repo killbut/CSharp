@@ -9,7 +9,7 @@ public class ProjectEditViewModel
     public string ProjectName { get; set; }
     public string CompanyCustomer { get; set; }
     public string CompanyExecutor { get; set; }
-    public IEnumerable<WorkerViewModel>? Workers { get; set; }
+    public ICollection<WorkerViewModel>? Workers { get; set; }
     public WorkerViewModel? Manager { get; set; }
     public ICollection<JobViewModel>? Jobs { get; set; }
     public DateTime StartTime { get; set; }

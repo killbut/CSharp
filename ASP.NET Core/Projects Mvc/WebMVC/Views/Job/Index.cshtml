@@ -28,7 +28,6 @@
                     <input name="priority" id="numberId" class="block" type="number" min="0" style="display: none"></input>
                     <input type="submit" value="Выполнить"></input>
                 </div>
-                
             }
         </th>
     </tr>
@@ -43,15 +42,15 @@
     <thead>
     <tr>
         <th >
-            <a  asp-action="">Добавить</a>
+            <a asp-action="Create">Добавить</a>
         </th>
-        <th>@Html.ActionLink("Задача","Index",new {sort=SortProjects.stringType},"post")</th>
+        <th>@Html.ActionLink("Задача", "Index", new { sort = SortProjects.stringType }, "post")</th>
         <th>@Html.DisplayName("Автор")</th>
         <th>@Html.DisplayName("Исполнитель")</th>
         <th>@Html.DisplayName("Статус")</th>
         <th>@Html.DisplayName("Комментарий")</th>
         <th>@Html.DisplayName("Приоритет")</th>
-        
+
     </tr>
     </thead>
     <tbody>
@@ -62,19 +61,26 @@
                 <a class="btn-sm btn-primary" asp-controller="Job" asp-action="View" asp-route-id="@item.Id">Посмотреть</a>
             </td>
             <td>
-                 @Html.DisplayFor(modelItem => item.JobName)
+                @Html.DisplayFor(modelItem => item.JobName)
             </td>
             <td>
                 @if (item.Author != null)
                 {
                     @Html.ActionLink($"{item.Author.FirstName} {item.Author.LastName}", "View", "Worker", new { id = item.Author.Id })
-
+                }
+                else
+                {
+                    @Html.DisplayName("---")
                 }
             </td>
             <td>
                 @if (item.Performer != null)
                 {
-                    @Html.ActionLink($"{item.Performer.FirstName} {item.Performer.LastName}", "View", "Worker", new { id = item.Author.Id })
+                    @Html.ActionLink($"{item.Performer.FirstName} {item.Performer.LastName}", "View", "Worker", new { id = item.Performer.Id })
+                }
+                else
+                {
+                    @Html.DisplayName("---")
                 }
             </td>
             <td>

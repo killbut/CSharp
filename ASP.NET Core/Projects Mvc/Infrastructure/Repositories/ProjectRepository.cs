@@ -1,4 +1,5 @@
-﻿using Core.Entities;
+﻿using System.Collections.Immutable;
+using Core.Entities;
 using Core.Repositories;
 using Infrastructure.Context;
 using Infrastructure.Repositories.Base;
@@ -14,14 +15,12 @@ namespace Infrastructure.Repositories
         {
             if (selectedWorkers != null)
             {
-                var workers=_context.Workers.Include(x=>x.Projects).Where(x => selectedWorkers.Contains(x.Id)).ToArray();
-                project.Workers = workers;
+                project.Workers = _context.Workers.Include(x=>x.Projects).Where(x => selectedWorkers.Contains(x.Id)).ToList();
             }
             if (managerId.HasValue)
             {
                 project.Manager = _context.Workers.Include(x=>x.Projects).First(x => x.Id == managerId.Value);
             }
-            
             return project;
         }
 
@@ -29,9 +28,8 @@ namespace Infrastructure.Repositories
         {
             if (selectedJobs != null)
             {
-                project.Jobs = _context.Jobs.Where(x => selectedJobs.Contains(x.Id)).ToArray();
+                project.Jobs = _context.Jobs.Where(x => selectedJobs.Contains(x.Id)).ToList();
             }
-
             return project;
         }
 

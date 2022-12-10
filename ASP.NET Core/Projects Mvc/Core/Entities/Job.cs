@@ -5,9 +5,9 @@ namespace Core.Entities;
 public class Job : BaseEntity
 {
     public string JobName { get; set; }
-    public Worker Author { get; set; }
+    public Worker? Author { get; set; }
     public virtual int? AuthorId { get; set; }
-    public Worker Performer { get; set; }
+    public Worker? Performer { get; set; }
     public virtual int? PerformerId { get; set; }
     public JobStatus Status { get; set; } = JobStatus.ToDo;
     public string Description { get; set; }

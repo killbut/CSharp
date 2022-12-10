@@ -37,7 +37,7 @@
         <dd>
             @if (Model.Manager != null)
             {
-                @Html.ActionLink(Model.Manager.FirstName, "View", "Worker", new { id = Model.Manager.Id })
+                @Html.ActionLink(Model.Manager.FullName, "View", "Worker", new { id = Model.Manager.Id })
             }
             else
             {
@@ -52,7 +52,7 @@
             {
                 foreach (var item in Model.Workers)
                 {
-                    <dd>  @Html.ActionLink($"{item.FirstName} {item.LastName}", "View", "Worker", new { item.Id })        </dd>
+                    <dd>  @Html.ActionLink(item.FullName, "View", "Worker", new { item.Id })  </dd>
                 }
             }
 
@@ -64,7 +64,7 @@
             {
                 foreach (var item in Model.Jobs)
                 {
-                    <dd>  @Html.ActionLink($"{item.JobName}", "View", "Job", new { item.Id })        </dd>
+                    <dd>  @Html.ActionLink($"{item.JobName}-{item.Status}", "View", "Job", new { item.Id }) </dd>
                 }
             }
 

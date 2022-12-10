@@ -14,7 +14,7 @@ public interface IJobService
     JobEditViewModel GetWhenEdit(int id);
     JobCreateViewModel GetWhenCreate();
     JobViewModel GetById(int id);
-    int Create(JobCreateViewModel job);
+    int Create(JobCreateViewModel jobModel);
     void Delete(int id);
-    int Update(JobViewModel project);
+    int Update(JobEditViewModel job);
 }

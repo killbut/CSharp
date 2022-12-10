@@ -31,17 +31,16 @@ namespace Infrastructure.Repositories.Base
                 query=query.Where(predicate);
 
             }
-            if (orderBy != null)
-            {
-                return orderBy(query).ToList();
-
-            }
             if (!string.IsNullOrEmpty(includeString))
             {
                 foreach (var include in includeString.Split())
                 {
                     query = query.Include(include);
                 }
+            }
+            if (orderBy != null)
+            {
+                return orderBy(query).ToList();
             }
             if (query.IsNullOrEmpty())
                 return new List<T>();

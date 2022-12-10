@@ -6,17 +6,17 @@ namespace WebMVC.Controllers
 {
     public class WorkerController : Controller
     {
-        private readonly IWorkerService _service;
+        private readonly IWorkerService _workerService;
         
-        public WorkerController(IWorkerService service)
+        public WorkerController(IWorkerService workerService)
         {
-            _service = service;
+            _workerService = workerService;
         }
 
         [HttpGet]
         public IActionResult Index()
         {
-            var workers = _service.GetWorkers(includes:"Projects Jobs");
+            var workers = _workerService.GetWorkers(includes:"Projects Jobs");
             return View(workers);
         }
 
@@ -31,7 +31,7 @@ namespace WebMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                var id=_service.Create(model);
+                var id=_workerService.Create(model);
                 return RedirectToAction("View",new{id});
             }
             return View();
@@ -40,14 +40,14 @@ namespace WebMVC.Controllers
         [HttpGet]
         public IActionResult View(int id)
         {
-            var worker = _service.GetById(id);
+            var worker = _workerService.GetById(id);
             return View(worker);
         }
 
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            var worker = _service.GetWhenEdit(id);
+            var worker = _workerService.GetWhenEdit(id);
             return View(worker);
         }
         
@@ -56,7 +56,7 @@ namespace WebMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                _service.Update(worker);
+                _workerService.Update(worker);
             }
             return RedirectToAction("View", new { worker.Id });
         }
@@ -64,7 +64,7 @@ namespace WebMVC.Controllers
         [HttpGet]
         public IActionResult Delete(int id)
         {
-            _service.Delete(id);
+            _workerService.Delete(id);
             return RedirectToAction("Index");
         }
     }

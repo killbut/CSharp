@@ -13,6 +13,7 @@ public class JobConfiguration : IEntityTypeConfiguration<Job>
 
         builder.HasOne(x => x.Author)
             .WithMany()
-            .HasForeignKey(x => x.AuthorId);
+            .HasForeignKey(x => x.AuthorId)
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }
