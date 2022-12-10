@@ -16,7 +16,7 @@ namespace WebMVC.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            return View(_projectService.GetProjects(Includes:"Manager Workers"));
+            return View(_projectService.GetProjects(Includes:"Manager Workers Jobs"));
         }
         
         [HttpPost]

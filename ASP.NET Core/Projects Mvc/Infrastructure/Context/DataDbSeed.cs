@@ -1,38 +1,37 @@
 ﻿using Core.Entities;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Context
 {
     public static class DataDbSeed
     {
-        public static void Seed(IServiceProvider serviceProvider)
+        public static void Seed(DataDbContext context)
         {
-            using (var context = serviceProvider.GetService<DataDbContext>())
+            context.Database.EnsureDeleted();
+            context.Database.Migrate();
+            context.Database.EnsureCreated();
+            if (!context.Workers.Any())
             {
-                try
-                {
-                    if (!context.Workers.Any())
-                    {
-                        AddWorkers(context);
-                    }
-                    if (!context.Projects.Any())
-                    {
-                        AddProjects(context);
-                    }
-                }
-                catch (Exception e)
-                {
-                    throw e;
-                }
+                AddWorkers(context);
+            }
+            if (!context.Projects.Any())
+            {
+                AddProjects(context);
+            }
+
+            if (!context.Jobs.Any())
+            {
+                AddJobs(context);
             }
         }
         private static void AddWorkers(DataDbContext context)
         {
             var worker = new[]
             {
-                new Worker{ FirstName="Иван",LastName="Иванов",Patronymic="Иванович",Email="Ivan@mail.ru"},
-                new Worker{ FirstName="Дмитрий",LastName="Кислин",Patronymic="Алексеевич",Email="Dima@mail.ru"},
-                new Worker{ FirstName="Мага",LastName="Магомед",Patronymic="Магомедович",Email="Magodan@mail.ru"}
+                new Worker{ FirstName="Кирилл",LastName="Иванов",Patronymic="Матвеевич",Email="Kirill@mail.ru"},
+                new Worker{ FirstName="Кира",LastName="Попова",Patronymic="Максимовна",Email="Kira@mail.ru"},
+                new Worker{ FirstName="Иван",LastName="Богданов",Patronymic="Алексеевич",Email="Ivan@mail.ru"},
+                new Worker{ FirstName="Мирон",LastName="Волков",Patronymic="Никитич",Email="Miron@mail.ru"}
             };
             context.Workers.AddRange(worker);
             context.SaveChanges();
@@ -66,5 +65,26 @@ namespace Infrastructure.Context
             context.Projects.AddRange(projects);
             context.SaveChanges();
         }
+
+        private static void AddJobs(DataDbContext context)
+        {
+            var jobs = new[]
+            {
+                new Job()
+                {
+                    JobName = "Задача_1", Author = context.Workers.First(), Performer = null, Status = JobStatus.ToDo,
+                    Description = "Описание задачи 1", Priority = 1
+                },
+                new Job()
+                {
+                    JobName = "Задача_2", Author = context.Workers.First(x => x.Id == 2),
+                    Performer = context.Workers.First(x => x.Id == 3), Status = JobStatus.ToDo,
+                    Description = "Описание задачи 2", Priority = 5
+                },
+            };
+            context.Jobs.AddRange(jobs);
+            context.SaveChanges();
+        }
     }
+    
 }

@@ -28,7 +28,6 @@
                     <input name="priority" id="numberId" class="block" type="number" min="0" style="display: none"></input>
                     <input type="submit" value="Выполнить"></input>
                 </div>
-                
             }
         </th>
     </tr>
@@ -43,17 +42,18 @@
     <thead>
     <tr>
         <th >
-            <a  asp-action="Create">Добавить</a>
+            <a asp-action="Create">Добавить</a>
         </th>
-        <th>@Html.ActionLink("Название Проекта","Index",new {sort=SortProjects.stringType},"post")</th>
+        <th>@Html.ActionLink("Название Проекта", "Index", new { sort = SortProjects.stringType }, "post")</th>
         <th>@Html.DisplayName("Компания заказчик")</th>
         <th>@Html.DisplayName("Компания исполнитель")</th>
         <th>@Html.DisplayName("Руководитель")</th>
         <th>@Html.DisplayName("Работников")</th>
+        <th>@Html.DisplayName("Задач")</th>
         <th>@Html.DisplayName("Дата начала")</th>
         <th>@Html.DisplayName("Дата окончания")</th>
         <th>@Html.DisplayName("Приоритет")</th>
-        
+
     </tr>
     </thead>
     <tbody>
@@ -69,20 +69,32 @@
             @if (item.Manager != null)
             {
                 <td >
-                    @Html.ActionLink($"{item.Manager.FirstName} {item.Manager.LastName}","View","Worker",new {id=item.Manager.Id})
+                    @Html.ActionLink($"{item.Manager.FirstName} {item.Manager.LastName}", "View", "Worker", new { id = item.Manager.Id })
                 </td>
             }
-            @if (item?.Workers.Count>0)
+            @if (item?.Workers.Count > 0)
             {
                 <td>
                     @Html.Raw(item.Workers.Count.ToString())
-                </td> 
+                </td>
             }
             else
             {
                 <td>
                     @Html.DisplayName("0")
-                </td> 
+                </td>
+            }
+            @if (item.Jobs.Count > 0)
+            {
+                <td>
+                    @Html.Raw(item.Workers.Count.ToString())
+                </td>
+            }
+            else
+            {
+                <td>
+                    @Html.DisplayName("0")
+                </td>
             }
             <td>@Html.Raw(item.StartTime.ToShortDateString())</td>
             <td>@Html.Raw(item.EndTime.ToShortDateString())</td>

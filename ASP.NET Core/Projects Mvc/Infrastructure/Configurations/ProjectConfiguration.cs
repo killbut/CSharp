@@ -12,11 +12,16 @@ namespace Infrastructure.Configurations
             builder.HasKey(x => x.Id);
             builder.Property(x => x.ProjectName).IsRequired();
             builder.Property(x => x.CompanyCustomer).IsRequired();
-            builder.HasMany(x => x.Workers).WithMany(x => x.Projects).UsingEntity(x=>x.ToTable("ProjectWorker"));
+
+            builder.HasMany(x => x.Workers)
+                .WithMany(x => x.Projects)
+                .UsingEntity(x=> x.ToTable("ProjectWorker"));
+
             builder.HasOne(x => x.Manager)
-                .WithOne(x => x.ManageProject)
-                .HasForeignKey("WorkerProjectId")
+                .WithMany()
+                .HasForeignKey("ManagerForeignKey")
                 .OnDelete(DeleteBehavior.SetNull);
+
         }
     }
 }

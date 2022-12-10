@@ -8,20 +8,7 @@ namespace Core.Entities
         public string LastName { get;  set; }
         public string Patronymic { get;  set; }
         public string Email { get; set; }
-        public virtual ICollection<Project>? Projects { get; set; } = new HashSet<Project>();
-        public virtual Project? ManageProject { get; set; }
-        public Worker()
-        {
-            
-        }
-        public Worker(int id,string firstName,string lastName,string patronymic,string email, ICollection<Project> projects)
-        {
-            Id = id;
-            FirstName = firstName;
-            LastName = lastName;
-            Patronymic = patronymic;
-            Email = email;
-            Projects = projects;
-        }
+        public ICollection<Project>? Projects { get; set; } = new HashSet<Project>();
+        public ICollection<Job>? Jobs { get; set; }
     }
 }

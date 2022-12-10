@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using Application.AutoMapper;
+using Application.Models.Jobs;
 using Application.Models.Projects;
 using Application.Models.Workers;
 using Application.Services.Interfaces;
@@ -12,11 +13,13 @@ namespace Application.Services
     {
         private readonly IProjectRepository _projectRepository;
         private readonly IWorkerRepository _workerRepository;
+        private readonly IJobRepository _jobRepository;
 
-        public ProjectService(IProjectRepository projectRepository,IWorkerRepository workerRepository)
+        public ProjectService(IProjectRepository projectRepository,IWorkerRepository workerRepository,IJobRepository jobRepository)
         {
             _projectRepository = projectRepository;
             _workerRepository = workerRepository;
+            _jobRepository = jobRepository;
         }
         
         public IEnumerable<ProjectViewModel> GetProjects(Expression<Func<Project, bool>> predicate = null, 
@@ -36,11 +39,11 @@ namespace Application.Services
 
         public ProjectEditViewModel GetWhenEdit(int id)
         {
-            var project = _projectRepository.Get(id);
-            var mappedProject = ObjectMapper.Mapper.Map<ProjectEditViewModel>(project);
-            var workers = _workerRepository.GetAll();
-            var mappedWorkers = ObjectMapper.Mapper.Map<IEnumerable<WorkerViewModel>>(workers);
+            var mappedProject = ObjectMapper.Mapper.Map<ProjectEditViewModel>( _projectRepository.GetById(id));
+            var mappedWorkers = ObjectMapper.Mapper.Map<IEnumerable<WorkerViewModel>>(_workerRepository.GetAll());
+            var mappedJobs = ObjectMapper.Mapper.Map<IEnumerable<JobViewModel>>(_jobRepository.GetAll());
             mappedProject.AvailableWorkers = mappedWorkers;
+            mappedProject.AvailableJobs = mappedJobs;
             return mappedProject;
         }
         public ProjectCreateViewModel GetWhenCreate()
@@ -48,8 +51,11 @@ namespace Application.Services
             var project = new ProjectCreateViewModel();
             var mappedProject = ObjectMapper.Mapper.Map<ProjectCreateViewModel>(project);
             var workers = _workerRepository.GetAll();
+            var jobs = _jobRepository.GetAll();
             var mappedWorkers = ObjectMapper.Mapper.Map<IEnumerable<WorkerViewModel>>(workers);
+            var mappedJobs = ObjectMapper.Mapper.Map<IEnumerable<JobViewModel>>(jobs);
             mappedProject.AvailableWorkers = mappedWorkers;
+            mappedProject.AvailableJobs = mappedJobs;
             return mappedProject;
         }
         public ProjectViewModel GetById(int id)
@@ -60,10 +66,11 @@ namespace Application.Services
 
         public int Create(ProjectCreateViewModel project)
         {
-            var mapped = ObjectMapper.Mapper.Map<Project>(project);
-            var newProject=_projectRepository.AddWorkersToProject(mapped, project.SelectedWorkersId, project.SelectedManagerId);
-            _projectRepository.Add(newProject);
-            return mapped.Id;
+            var mappedProject = ObjectMapper.Mapper.Map<Project>(project);
+            mappedProject=_projectRepository.AddWorkersToProject(mappedProject, project.SelectedWorkersId, project.SelectedManagerId);
+            mappedProject = _projectRepository.AddJobsToProject(mappedProject, project.SelectedJobs);
+            _projectRepository.Add(mappedProject);
+            return mappedProject.Id;
         }
 
         public void Delete(int id)
@@ -73,7 +80,11 @@ namespace Application.Services
 
         public int Update(ProjectEditViewModel project)
         {
-            throw new NotImplementedException();
+            var mappedProject = ObjectMapper.Mapper.Map<Project>(project);
+            mappedProject = _projectRepository.AddJobsToProject(mappedProject, project.SelectedJobs);
+            mappedProject = _projectRepository.AddWorkersToProject(mappedProject, project.SelectedWorkersId, project.SelectedManagerId);
+            _projectRepository.Update(mappedProject);
+            return mappedProject.Id;
         }
     }
 }

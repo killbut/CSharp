@@ -15,12 +15,12 @@
     <dd class="col-sm-10">
         @Html.DisplayFor(model => model.Id)
     </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayName("Фамилия")
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.LastName)
-        </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayName("Фамилия")
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.LastName)
+    </dd>
     <dt class="col-sm-2">
         @Html.DisplayName("Имя")
     </dt>
@@ -39,60 +39,32 @@
     <dd class="col-sm-10">
         @Html.DisplayFor(model => model.Email)
     </dd>
-    <div class="form-group">
-        @if (Model.Projects.Count>0)
+    <div class="col-sm-10">
+        @Html.DisplayName("Проекты")
+        @if (Model.Projects.Count > 0)
         {
-            <label asp-for="Projects" class="control-label">Проекты</label>
-            <table class="Proj">
-
-                <thead>
-                <tr>
-                    <th>Имя проекта</th>
-                    <th>Менеджер</th>
-                    <th>Работник</th>
-                </tr>
-                </thead>
-
-                <tbody>
-                @foreach (var project in Model.Projects)
-                {
-                    <tr>
-                        <th>
-                            @Html.ActionLink(project.ProjectName, "View", "Project", new { project.Id })
-                        </th>
-                        <th>
-                            @if (project.Manager != null)
-                            {
-                                if (project.Manager.Id == Model.Id)
-                                {
-                                    <label>Да</label>
-                                }
-                            }
-                            else
-                            {
-                                <label>Нет</label>
-                            }
-                        </th>
-                        <th>
-                            @if (project.Workers != null)
-                            {
-                                if (project.Workers.Select(x => x.Id).Contains(Model.Id))
-                                {
-                                    <label>Да</label>
-                                }
-                            }
-                            else
-                            {
-                                <label>Нет</label>
-                            }
-                        </th>
-                    </tr>
-                }
-                </tbody>
-            </table>
+            foreach (var project in Model.Projects)
+            {
+                <dt>
+                    @Html.ActionLink(project.ProjectName,"View","Project",new {project.Id})
+                </dt>
+            }
+        }
+    </div>
+    <div class="col-sm-10">
+        @Html.DisplayName("Задачи")
+        @if (Model.Jobs.Count > 0)
+        {
+            foreach (var job in Model.Jobs)
+            {
+                <dt>
+                    @Html.ActionLink(job.JobName,"View","Job",new {job.Id})
+                </dt>
+            }
         }
     </div>
 </div>
+
 <div>
     <a class="btn-sm btn-primary" asp-controller="Worker" asp-action="Edit" asp-route-id="@Model.Id">Редактировать</a>
     <a class="btn-sm btn-warning" asp-controller="Worker" asp-action="Delete" asp-route-id="@Model.Id">Удалить</a>

@@ -13,12 +13,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<DataDbContext>(x => x.UseSqlServer(builder.Configuration.GetConnectionString("DbConnection")));
-builder.Services.AddScoped(typeof(IRepository<>),typeof(BaseRepositories<>)); 
+builder.Services.AddScoped(typeof(IRepository<>),typeof(BaseRepository<>)); 
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<IWorkerRepository, WorkerRepository>();
+builder.Services.AddScoped<IJobRepository, JobRepository>();
 
 builder.Services.AddScoped<IWorkerService, WorkerService>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
+builder.Services.AddScoped<IJobService, JobService>();
 
 builder.Services.AddAutoMapper(typeof(Program));
 
@@ -35,9 +37,12 @@ else
 {
    app.UseDeveloperExceptionPage();
 }
-//todo projectworker entity
+using (var scope = app.Services.CreateScope())
+{
+    DataDbSeed.Seed(scope.ServiceProvider.GetService<DataDbContext>());
+}
 app.UseHttpsRedirection();
-//app.UseDefaultFiles();
+app.UseDefaultFiles();
 app.UseStaticFiles();
 app.UseRouting();
 app.MapControllerRoute("default","{controller=Home}/{action=Index}/{id?}");

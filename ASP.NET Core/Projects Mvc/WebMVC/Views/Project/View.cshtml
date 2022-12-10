@@ -6,49 +6,87 @@
 <div>
     <h4>Проект</h4>
     <hr/>
-    <dl class="row"/>
-    <dt>@Html.DisplayName("Id")</dt>
-    <dd>@Html.DisplayFor(x => x.Id)</dd>
-    
-    <dt>@Html.DisplayName("Название проекта")</dt>
-    <dd>@Html.DisplayFor(x => x.ProjectName)</dd>
-
-    <dt>@Html.DisplayName("Компания-Заказчик")</dt>
-    <dd>@Html.DisplayFor(x => x.CompanyCustomer)</dd>
-    
-    <dt class="col-sm-2">@Html.DisplayName("Компания-Исполнитель")</dt>
-    <dd>@Html.DisplayFor(x=>x.CompanyExecutor)</dd>
-    
-    <dt class="col-sm-2">@Html.DisplayName("Руководитель")</dt>
-    @if (Model.Manager != null)
-    {
-        <dd>@Html.ActionLink(Model.Manager.FirstName,"View","Worker",new{id=Model.Manager.Id})</dd>
-    }
-    else
-    {
-        <dd>@Html.DisplayName("------")</dd>
-    }
-    <dt class="col-sm-2">@Html.DisplayName("Работники")</dt>
-    <dd>
-        @if (Model.Workers.Count >= 0)
-        {
-            foreach (var item in Model.Workers)
+    <dl>
+        <dt>
+            @Html.DisplayName("Id")
+        </dt>
+        <dd>
+            @Html.DisplayFor(x => x.Id)
+        </dd>
+        <dt>
+            @Html.DisplayName("Название проекта")
+        </dt>
+        <dd>
+            @Html.DisplayFor(x => x.ProjectName)
+        </dd>
+        <dt>
+            @Html.DisplayName("Компания-Заказчик")
+        </dt>
+        <dd>
+            @Html.DisplayFor(x => x.CompanyCustomer)
+        </dd>
+        <dt>
+            @Html.DisplayName("Компания-Исполнитель")
+        </dt>
+        <dd>
+            @Html.DisplayFor(x => x.CompanyExecutor)
+        </dd>
+        <dt>
+            @Html.DisplayName("Руководитель")
+        </dt>
+        <dd>
+            @if (Model.Manager != null)
             {
-                <dd>
-                    @Html.ActionLink($"{item.FirstName} {item.LastName}", "View", "Worker", new { item.Id })
-                </dd>
+                @Html.ActionLink(Model.Manager.FirstName, "View", "Worker", new { id = Model.Manager.Id })
             }
-        }
-    </dd>
-    
-    <dt>@Html.DisplayName("Дата начала")</dt>
-    <dd>@Html.DisplayFor(x => x.StartTime.Date)</dd>
-    
-    <dt>@Html.DisplayName("Дата окончания")</dt>
-    <dd>@Html.DisplayFor(x=>x.EndTime.Date)</dd>
-    
-    <dt>@Html.DisplayName("Приоритет")</dt>
-    <dd>@Html.DisplayFor(x => x.Priority)</dd>
+            else
+            {
+                @Html.DisplayName("------")
+            }
+        </dd>
+        <dt>
+            @Html.DisplayName("Работники")
+        </dt>
+        
+            @if (Model.Workers.Count >= 0)
+            {
+                foreach (var item in Model.Workers)
+                {
+                    <dd>  @Html.ActionLink($"{item.FirstName} {item.LastName}", "View", "Worker", new { item.Id })        </dd>
+                }
+            }
+
+        <dt>
+            @Html.DisplayName("Задачи")
+        </dt>
+       
+            @if (Model.Jobs.Count >= 0)
+            {
+                foreach (var item in Model.Jobs)
+                {
+                    <dd>  @Html.ActionLink($"{item.JobName}", "View", "Job", new { item.Id })        </dd>
+                }
+            }
+
+        <dt>
+            @Html.DisplayName("Дата начала")
+        </dt>
+        <dd>
+            @Html.DisplayFor(x => x.StartTime.Date)
+        </dd>
+        <dt>
+            @Html.DisplayName("Дата окончания")
+        </dt>
+        <dd>
+            @Html.DisplayFor(x => x.EndTime.Date)
+        </dd>
+        <dt>
+            @Html.DisplayName("Приоритет")
+        </dt>
+        <dd>
+            @Html.DisplayFor(x => x.Priority)
+        </dd>
+    </dl>
     
 </div>
 <div>

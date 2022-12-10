@@ -1,5 +1,4 @@
-﻿using System.Linq.Expressions;
-using Core.Entities;
+﻿using Core.Entities;
 using Core.Repositories;
 using Infrastructure.Context;
 using Infrastructure.Repositories.Base;
@@ -7,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
-    public class ProjectRepository : BaseRepositories<Project>, IProjectRepository
+    public class ProjectRepository : BaseRepository<Project>, IProjectRepository
     {
         public ProjectRepository(DataDbContext context) : base(context) { }
         
@@ -20,17 +19,19 @@ namespace Infrastructure.Repositories
             }
             if (managerId.HasValue)
             {
-                project.Manager = _context.Workers.First(x => x.Id == managerId.Value);
+                project.Manager = _context.Workers.Include(x=>x.Projects).First(x => x.Id == managerId.Value);
+            }
+            
+            return project;
+        }
+
+        public Project AddJobsToProject(Project project, IEnumerable<int>? selectedJobs)
+        {
+            if (selectedJobs != null)
+            {
+                project.Jobs = _context.Jobs.Where(x => selectedJobs.Contains(x.Id)).ToArray();
             }
 
-            var a = _context.ChangeTracker.Entries<Worker>().FirstOrDefault().Properties;
-            foreach (var b in a)
-            {
-                if (b.Metadata.IsShadowProperty())
-                {
-                    var c = b;
-                }
-            }
             return project;
         }
 
@@ -38,7 +39,9 @@ namespace Infrastructure.Repositories
         {
             var project = _context.Projects
                 .Include(x=>x.Workers)
-                .Include(x => x.Manager).First(x => x.Id == id);
+                .Include(x => x.Manager)
+                .Include(x=>x.Jobs)
+                .First(x => x.Id == id);
             Remove(project);
         }
 
@@ -46,6 +49,7 @@ namespace Infrastructure.Repositories
         {
             return _context.Projects.Include(x => x.Manager)
                                     .Include(x => x.Workers)
+                                    .Include(x=>x.Jobs)
                                     .First(x => x.Id == id);
         }
     }

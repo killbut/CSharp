@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
-    public class WorkerRepository : BaseRepositories<Worker>, IWorkerRepository
+    public class WorkerRepository : BaseRepository<Worker>, IWorkerRepository
     {
         public WorkerRepository(DataDbContext context) : base(context) { }
 
@@ -14,14 +14,16 @@ namespace Infrastructure.Repositories
         {
             var worker = _context.Workers
                 .Include(x => x.Projects)
-                .Single(x => x.Id == id);
-            worker.Projects.Where(x => x.Workers.Remove(worker));
+                .Include(x=>x.Jobs)
+                .First(x => x.Id == id);
             Remove(worker);
         }
 
         public Worker GetById(int id)
         {
-            return _context.Workers.Include(x => x.Projects).First(x=>x.Id==id);
+            return _context.Workers.Include(x => x.Projects)
+                .Include(x=>x.Jobs)
+                .First(x=>x.Id==id);
         }
     }
 }

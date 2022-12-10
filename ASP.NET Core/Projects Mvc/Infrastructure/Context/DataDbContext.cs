@@ -1,7 +1,6 @@
 ﻿using Core.Entities;
 using Infrastructure.Configurations;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Infrastructure.Context
 {
@@ -9,7 +8,7 @@ namespace Infrastructure.Context
     {
         public DbSet<Project> Projects { get; set; } = null!;
         public DbSet<Worker> Workers { get; set; } = null!;
-        
+        public DbSet<Job> Jobs { get; set; } = null!;
         public DataDbContext(DbContextOptions<DataDbContext> opt) : base(opt) 
         {
         }
@@ -18,11 +17,12 @@ namespace Infrastructure.Context
         {
             
         }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfiguration(new ProjectConfiguration());
             builder.ApplyConfiguration(new WorkerConfiguration());
-            
+            builder.ApplyConfiguration(new JobConfiguration());
         }
     }
 }

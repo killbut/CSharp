@@ -17,6 +17,7 @@
         <th>@Html.DisplayName("Отчество") </th>
         <th> @Html.DisplayName("Почта")</th>
         <th>@Html.DisplayName("Проекты")</th>
+        <th>@Html.DisplayName("Задачи")</th>
     </tr>
     </thead>
     <tbody>
@@ -30,10 +31,26 @@
             <th> @Html.DisplayFor(modelItem => item.FirstName) </th>
             <th>@Html.DisplayFor(modelItem => item.Patronymic)</th>
             <th> @Html.DisplayFor(modelItem => item.Email)</th>
-            @if (item.Projects.Count>0)
+            @if (item.Projects.Count > 0)
             {
                 <td>
-                    @Html.Raw(item.Projects.Count.ToString());
+                    @Html.Raw(item.Projects.Count.ToString())
+                </td>
+            }
+            else
+            {
+                <td>
+                    @Html.DisplayName("0")
+                </td>
+            }
+            @if (item.Jobs.Count > 0)
+            {
+                <td>@Html.Raw(item.Jobs.Count.ToString())</td>
+            }
+            else
+            {
+                <td>
+                    @Html.DisplayName("0")
                 </td>
             }
         </tr>

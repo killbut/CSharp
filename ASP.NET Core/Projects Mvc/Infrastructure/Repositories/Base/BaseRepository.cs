@@ -7,11 +7,11 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Infrastructure.Repositories.Base
 {
-    public class BaseRepositories<T> : IRepository<T> where T : BaseEntity
+    public class BaseRepository<T> : IRepository<T> where T : BaseEntity
     {
         protected readonly DataDbContext _context;
 
-        protected BaseRepositories(DataDbContext context)
+        protected BaseRepository(DataDbContext context)
         {
             _context = context;
         }
@@ -66,7 +66,5 @@ namespace Infrastructure.Repositories.Base
             _context.Set<T>().Remove(entity);
             _context.SaveChanges();
         }
-
-
     }
 }

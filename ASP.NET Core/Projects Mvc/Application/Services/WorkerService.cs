@@ -50,7 +50,6 @@ namespace Application.Services
 
         public void Delete(int id)
         {
-            
             _workerRepository.Delete(id);
         }
 

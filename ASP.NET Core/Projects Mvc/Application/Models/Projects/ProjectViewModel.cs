@@ -1,4 +1,5 @@
-﻿using Application.Models.Workers;
+﻿using Application.Models.Jobs;
+using Application.Models.Workers;
 
 namespace Application.Models.Projects
 {
@@ -13,6 +14,6 @@ namespace Application.Models.Projects
         public DateTime StartTime { get;  set; }
         public DateTime EndTime { get;  set; }
         public ushort Priority { get;  set; }
-        public IEnumerable<SortProjects> SortBy { get; set; }
+        public ICollection<JobViewModel>? Jobs { get; set; }
     }
 }

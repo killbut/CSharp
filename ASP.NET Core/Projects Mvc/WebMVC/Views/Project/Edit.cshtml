@@ -7,20 +7,20 @@
 <h1>Редактировать</h1>
 
 <h4>Проект</h4>
-<hr />
+<hr/>
 <div class="row">
-    <form asp-controller="Project" asp-action="Edit">
+    <form method="post">
         <div class="form-group">
-            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="Id"/>
         </div>
         <div class="form-group">
             <label asp-for="ProjectName" class="control-label">Название проекта</label>
-            <input asp-for="ProjectName" class="form-control" />
+            <input asp-for="ProjectName" class="form-control"/>
             <span asp-validation-for="ProjectName" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label asp-for="CompanyCustomer" class="control-label">Компания-Заказчик</label>
-            <input asp-for="CompanyCustomer" class="form-control" />
+            <input asp-for="CompanyCustomer" class="form-control"/>
             <span asp-validation-for="CompanyCustomer" class="text-danger"></span>
         </div>
         <div class="form-group">
@@ -28,41 +28,74 @@
             <input asp-for="CompanyExecutor" class="form-control" TYPE="text"/>
             <span asp-validation-for="CompanyExecutor" class="text-danger"></span>
         </div>
-        <div class="form-group">
+        <div class="row">
             <label asp-for="Manager" class="control-label">Текущий Руководитель</label>
-            @Html.ActionLink(Model.Manager.FirstName+Model.Manager.LastName,"View","Worker",new{Model.Manager.Id})
-            
-            <label asp-for="Manager" class="control-label">Выбрать Руководителя</label>
-            @Html.DropDownListFor(x=>x.Manager,new SelectList(Model.AvailableWorkers,"Id","FirstName",new{Model.SelectedManagerId}))
-            <span asp-validation-for="Manager" class="text-danger"></span>
-            <span asp-validation-for="Manager" class="text-danger"></span>
+            @if (Model.Manager != null)
+            {
+                @Html.ActionLink($"{Model.Manager.FirstName} {Model.Manager.LastName}", "View", "Worker", new { Model.Manager.Id })
+            }
+            else
+            {
+                @Html.DisplayName("--------")
+            }
         </div>
-        <div class="form-group">
-            <label asp-for="Manager" class="control-label">Текущие Работники</label>
-            @Html.ListBoxFor(x=>x.Workers,new SelectList(Model.Workers))
-            
-            <label asp-for="Manager" class="control-label">Выбрать работников</label>
-            @Html.ListBoxFor(x=>x.AvailableWorkers, new MultiSelectList(Model.AvailableWorkers,"Id","FirstName",Model.Workers))
-            <span asp-validation-for="Manager" class="text-danger"></span>
+        <div class="row">
+            <label asp-for="SelectedManagerId" class="control-label">Выбрать Руководителя</label>
+            @Html.DropDownListFor(x => x.SelectedManagerId, new SelectList(Model.AvailableWorkers, "Id", "FirstName", Model.SelectedManagerId ))
         </div>
-        <div class="form-group">
+        <div class="row">
+            <label asp-for="Workers" class="control-label">Текущие Работники</label>
+            @if (Model.Workers.Count() > 0)
+            {
+                foreach (var item in Model.Workers)
+                {
+                    @Html.ActionLink($"{item.FirstName} {item.LastName}", "View", "Worker", new { item.Id })
+                }
+            }
+            else
+            {
+                @Html.DisplayName("--------")
+            }
+        </div>
+        <div class="row">
+            <label asp-for="SelectedWorkersId" class="control-label">Выбрать работников</label>
+            @Html.ListBoxFor(x => x.SelectedWorkersId, new MultiSelectList(Model.AvailableWorkers, "Id", "FirstName", Model.Workers))
+        </div>
+        <div class="row">
+            <label asp-for="Jobs" class="control-label">Текущие задачи</label>
+            @if (Model.Jobs.Count > 0)
+            {
+                foreach (var item in Model.Jobs)
+                {
+                    @Html.ActionLink($"{item.JobName}-{item.Status}", "View", "Job", new { item.Id })
+                }
+            }
+            else
+            {
+                @Html.DisplayName("--------")
+            }
+        </div>
+        <div class="row">
+            <label asp-for="Jobs" class="control-label">Выбрать задачи</label>
+            @Html.ListBoxFor(x => x.SelectedJobs, new MultiSelectList(Model.AvailableJobs, "Id", "JobName", Model.SelectedJobs))
+        </div>
+        <div class="row">
             <label asp-for="StartTime" class="control-label">Дата начала</label>
             <input asp-for="StartTime" class="control-label" type="date"/>
-            <span asp-validation-for="Manager" class="text-danger"></span>
+            <span asp-validation-for="StartTime" class="text-danger"></span>
         </div>
-        <div class="form-group">
-            <label asp-for="EndTime" >Дата начала</label>
+        <div class="row">
+            <label asp-for="EndTime">Дата начала</label>
             <input asp-for="EndTime" type="date"/>
-            <span asp-validation-for="Manager" class="text-danger"></span>
+            <span asp-validation-for="EndTime" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <label asp-for="Priority" >Дата начала</label>
+            <label asp-for="Priority">Приоритет</label>
             <input asp-for="Priority" type="number"/>
-            <span asp-validation-for="Manager" class="text-danger"></span>
+            <span asp-validation-for="Priority" class="text-danger"></span>
         </div>
-        
         <div class="form-group">
-            <input type="submit" value="Save" class="btn btn-outline-secondary" />
+            <input type="submit" value="Сохранить" class="btn-sm"/>
         </div>
     </form>
 </div>

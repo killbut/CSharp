@@ -1,4 +1,5 @@
-﻿using Application.Models.Projects;
+﻿using Application.Models.Jobs;
+using Application.Models.Projects;
 using Application.Models.Workers;
 using AutoMapper;
 using Core.Entities;
@@ -17,6 +18,10 @@ namespace Application.AutoMapper
             CreateMap<Project,ProjectViewModel>().ForMember(x=>x.Workers,opt=>opt.MapFrom(x=>x.Workers)).ReverseMap();
             CreateMap<Project, ProjectCreateViewModel>().ReverseMap();
             CreateMap<Project, ProjectEditViewModel>().ReverseMap();
+
+            CreateMap<Job, JobViewModel>().ReverseMap();
+            CreateMap<Job, JobEditViewModel>().ReverseMap();
+            CreateMap<Job, JobCreateViewModel>().ReverseMap();
         }
     }
 }
